@@ -21,8 +21,19 @@ function RoutesConfig($stateProvider, $urlRouterProvider) {
       templateUrl: 'templete/categories.html'
     })
     .state('items', {
-      url: '/items/{shortName}',
-      templateUrl: 'templete/items.html'
+      url: '/items/{category}',
+      templateUrl: 'templete/items.html',
+      controller: 'itemsController as itemsController',
+      resolve: {
+       items: ['MenuDataService', '$stateParams',
+        function(MenuDataService, $stateParams) {
+          return MenuDataService.getItemsForCategory($stateParams.category)
+          .then(function(response) {
+            console.log("In service", response.data.menu_items);
+            return response.data.menu_items;
+        });
+      }] 
+      }
     });
 }
 
